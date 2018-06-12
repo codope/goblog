@@ -4,7 +4,7 @@ import (
         "github.com/boltdb/bolt"
         "log"
         "strconv"
-        "github.com/callistaenterprise/goblog/accountservice/model"
+        "goblog/accountservice/model"
         "encoding/json"
         "fmt"
 )

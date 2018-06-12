@@ -4,8 +4,8 @@ import (
         . "github.com/smartystreets/goconvey/convey"
         "testing"
         "net/http/httptest"
-        "github.com/callistaenterprise/goblog/accountservice/dbclient"
-        "github.com/callistaenterprise/goblog/accountservice/model"
+        "goblog/accountservice/dbclient"
+        "goblog/accountservice/model"
         "fmt"
         "encoding/json"
 )
@@ -14,11 +14,15 @@ import (
 
 
 func TestGetAccount(t *testing.T) {
+        // Create a mock instance that implements the IBoltClient interface
         mockRepo := &dbclient.MockBoltClient{}
-
+        // Declare two mock behaviours. For "123" as input, return a proper Account struct and nil as error.
+        // For "456" as input, return an empty Account object and a real error.
         mockRepo.On("QueryAccount", "123").Return(model.Account{Id:"123", Name:"Person_123"}, nil)
         mockRepo.On("QueryAccount", "456").Return(model.Account{}, fmt.Errorf("Some error"))
+        // Finally, assign mockRepo to the DBClient field (it's in _handlers.go_, e.g. in the same package)
         DBClient = mockRepo
+
 
         Convey("Given a HTTP request for /accounts/123", t, func() {
                 req := httptest.NewRequest("GET", "/accounts/123", nil)
